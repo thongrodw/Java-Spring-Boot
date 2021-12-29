@@ -1,6 +1,7 @@
 package com.example.demo.AWD;
 
 import com.example.demo.services.HttpService;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class CreateWork {
     String statusName;
     String processName;
     String assignTo;
-    HashMap<String, String> instance = new HashMap<String, String>();
+    HashMap<String, Object> instance = new HashMap<String, Object>();
     HashMap<String, List<HashMap<String, String>>> fieldValue = new HashMap<String, List<HashMap<String, String>>>();
     List<HashMap<String, String>> fieldValueList = new ArrayList<>();;
 
@@ -36,7 +37,7 @@ public class CreateWork {
     //Add LOB to instance
     public void addFieldValue(String key,String value){
         HashMap<String, String> myFieldValue = new HashMap<String, String>();
-        myFieldValue.put("name",key);
+        myFieldValue.put("@name",key);
         myFieldValue.put("value",value);
         this.fieldValueList.add(myFieldValue);
 
@@ -48,16 +49,15 @@ public class CreateWork {
     //Request
     public void initialize(){
 
-//        String url = "http://10.62.25.70/awdServer/awd/services/v1/instances";
-        String url = "https://webhook.site/2a1954d2-29cf-4e41-b9dc-2b00b4bc6812";
+        String url = "http://10.62.25.70/awdServer/awd/services/v1/instances";
 
-        HashMap<String, HashMap<String, String>> createInstance = new HashMap<>();
+        HashMap<String, HashMap<String, Object>> createInstance = new HashMap<>();
         createInstance.put("createInstance", instance);
 
-        List<HashMap<String, HashMap<String, String>>> list = new ArrayList<>();
+        List<HashMap<String, HashMap<String, Object>>> list = new ArrayList<>();
         list.add(createInstance);
 
-        HashMap<String, List<HashMap<String, HashMap<String, String>>>> createList = new HashMap<>();
+        HashMap<String, List<HashMap<String, HashMap<String, Object>>>> createList = new HashMap<>();
         createList.put("createList",list);
 
         System.out.println(HttpService.POSTRequest(url,createList));
@@ -76,15 +76,12 @@ public class CreateWork {
         //Constructor
         CreateWork work = new CreateWork(businessAreaName,typeName,statusName,processName,assignTo);
 
-        //Add LOB
+//        //Add LOB
         work.addFieldValue("AMTV","1234");
         work.addFieldValue("ATV","1234");
 
-        //Request to Mock Server
-//        HttpService.POSTRequest(HttpService.testServer,work.fieldValue);
-
-        //Request to AWD Server
-//        work.initialize();
+//        Request to AWD Server
+        work.initialize();
 
     }
 
