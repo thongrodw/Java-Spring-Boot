@@ -49,8 +49,8 @@ public class UpdateWork {
         UpdateWork work = new UpdateWork(businessAreaName,typeName);
 
         //Required Parameter
-        String workId = "2021-12-28-03.14.41.619160T01";
-        String formId = "1640683016150";
+        String workId = "2022-01-04-02.34.34.775200T01";
+        String formId = "1641285316885";
 
         //Update Status
         work.updateStatus(workId,"PROCESSED");
