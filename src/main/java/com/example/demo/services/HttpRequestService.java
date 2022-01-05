@@ -110,7 +110,7 @@ public class HttpRequestService extends HttpService{
 
     public static void main(String[] args) throws Exception {
         HttpRequestService Service = new HttpRequestService("B2BAuthen","DSTSETUP","cdbhjbcsd");
-        System.out.println(Service.GET("http://10.62.25.70/awdServer/b2b/services/v1/system?"));
+//        System.out.println(Service.GET("http://10.62.25.70/awdServer/b2b/services/v1/system?"));
     }
 
 }
