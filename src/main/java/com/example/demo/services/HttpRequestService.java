@@ -1,14 +1,14 @@
 package com.example.demo.services;
 
 import com.example.demo.AWD.B2B;
-import com.example.demo.AWD.UpdateWork;
-import org.apache.catalina.User;
+import com.example.demo.AWD.CreateFieldValue;
+import com.example.demo.AWD.CreateInstance;
+import com.example.demo.AWD.CreateWork;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class HttpRequestService extends HttpService{
 
@@ -22,30 +22,30 @@ public class HttpRequestService extends HttpService{
         Password = password;
    }
 
-    public static HttpEntity<String> AuthenHeader() throws Exception {
-       HttpEntity<String> requestHeader = null;
+    public static HttpHeaders AuthenHeader() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
        if (authenticationMethod == "BasicAuthen"){
-           requestHeader = BasicAuthenHeader(UserId,Password);
-           System.out.println(requestHeader);
+           headers.setBasicAuth(UserId,Password);
        }
        else if(authenticationMethod == "B2BAuthen"){
            String signature = B2B.sign(UserId, new Date());
-           requestHeader = B2BAuthenHeader(signature,UserId);
-           System.out.println(requestHeader);
+           headers.add("remote_user", UserId);
+           headers.add("B2BSignature", signature);
        }
-       return requestHeader;
+       return headers;
    }
 
-    public String GET(String url) {
+    public static String GET(String url) {
 
         String json = null;
 
         try {
 
-            HttpEntity<String> requestHeader = AuthenHeader();
+            HttpHeaders requestHeader = AuthenHeader();
+            HttpEntity<String> headers = new HttpEntity<String>(requestHeader);
 
             //Request
-            ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, requestHeader, String.class);
+            ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, headers, String.class);
 
             //Response
             json = response.getBody();
@@ -57,18 +57,17 @@ public class HttpRequestService extends HttpService{
         return json;
     }
 
-    public String POST(String url, Object body) {
+    public static String POST(String url, Object body) {
 
         String json = null;
 
         try {
 
             //HTTP Request Header for POST Request
-            HttpEntity<String> header = AuthenHeader();
+            HttpHeaders header = AuthenHeader();
+            HttpEntity<Object> requestHeader = new HttpEntity<Object>(body,header);
 
-            //Add Body to header
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<Object> requestHeader = new HttpEntity<Object>(body,headers);
+            System.out.println(requestHeader);
 
             //Request
             ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.POST, requestHeader, String.class);
@@ -83,34 +82,27 @@ public class HttpRequestService extends HttpService{
         return json;
     }
 
-//    public String PUT(String url, Object body) {
-//
-//        String json = null;
-//
-//        try {
-//
-//            //HTTP Request Header for POST Request
-//            HttpEntity<String> header = AuthenHeader();
-//
-//            //Add Body to header
-//            HttpEntity<Object> requestHeader = setHTTPBody(header,body);
-//
-//            //Request
-//            ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, requestHeader, String.class);
-//
-//            //Response
-//            json = response.getBody();
-//
-//        } catch (Exception err) {
-//            err.printStackTrace();
-//        }
-//
-//        return json;
-//    }
+    public static String PUT(String url, Object body) {
 
-    public static void main(String[] args) throws Exception {
-        HttpRequestService Service = new HttpRequestService("B2BAuthen","DSTSETUP","cdbhjbcsd");
-//        System.out.println(Service.GET("http://10.62.25.70/awdServer/b2b/services/v1/system?"));
+        String json = null;
+
+        try {
+
+            //HTTP Request Header for POST Request
+            HttpHeaders header = AuthenHeader();
+            HttpEntity<Object> requestHeader = new HttpEntity<Object>(body,header);
+
+            //Request
+            ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, requestHeader, String.class);
+
+            //Response
+            json = response.getBody();
+
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+
+        return json;
     }
 
 }

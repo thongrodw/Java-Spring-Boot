@@ -36,9 +36,4 @@ public class B2B {
         return hash+seperator+message;
     }
 
-    public static void main(String[] args) throws Exception {
-        String signature = B2B.sign("DSTSETUP", new Date());
-        System.out.println(signature);
-    }
-
 }

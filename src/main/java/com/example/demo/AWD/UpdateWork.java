@@ -1,10 +1,8 @@
 package com.example.demo.AWD;
 
-import com.example.demo.services.HttpService;
+import com.example.demo.services.HttpRequestService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class UpdateWork {
 
@@ -29,18 +27,36 @@ public class UpdateWork {
     }
 
     //Request
-    public void initialize(String id,String formId){
+    public void initialize(String id,String formId, String authentication){
 
-//        String url = "http://10.62.25.70/awdServer/awd/services/v1/instances/2021-12-28-02.39.00.287160T01/form?_=1640679106466";
-        String url = "http://10.62.25.70/awdServer/awd/services/v1/instances/"+id+"/form?_="+formId;
+        String AuthenMethod = null;
 
+        if(authentication == "BasicAuthen"){
+            AuthenMethod = "awd";
+        }
+        else if(authentication == "B2BAuthen"){
+            AuthenMethod= "b2b";
+        }
+        else{
+            AuthenMethod= "awd";
+        }
+
+//        String url = "http://10.62.25.70/awdServer/"+AuthenMethod+"/services/v1/instances/"+id+"/form?_="+formId;
+        String url = "http://10.62.25.70/awdServer/"+AuthenMethod+"/services/v1/instances";
+
+        HashMap<String, HashMap<String, HashMap<String, String>>> updateInstances = new HashMap<>();
         HashMap<String, HashMap<String, String>> updateInstance = new HashMap<>();
         updateInstance.put("updateInstance", this.instance);
+        updateInstances.put("updateInstances", updateInstance);
 
-        System.out.println(HttpService.PUTRequest(url,updateInstance));
+        System.out.println(HttpRequestService.PUT(url,updateInstances));
     }
 
     public static void main(String[] args) {
+
+//        String Authentication = "B2BAuthen";
+        String Authentication = "BasicAuthen";
+        HttpRequestService Service = new HttpRequestService(Authentication,"DSTSETUP","Passwd@2");
 
         String businessAreaName = "SAMPLEBA";
         String typeName = "SAMPLEWT";
@@ -49,16 +65,14 @@ public class UpdateWork {
         UpdateWork work = new UpdateWork(businessAreaName,typeName);
 
         //Required Parameter
-        String workId = "2022-01-04-02.34.34.775200T01";
-        String formId = "1641285316885";
+        String workId = "2022-01-06-01.02.27.565280T01";
+        String formId = "1641457458896";
 
         //Update Status
         work.updateStatus(workId,"PROCESSED");
 
         //Request to AWD Server
-        work.initialize(workId,formId);
+        work.initialize(workId,formId,Authentication);
     }
-
-
 
 }

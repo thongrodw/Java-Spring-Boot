@@ -84,6 +84,7 @@ public class HttpService {
 
     //Body
 
+    //Add Body to BasicAuthen Header
     public static HttpEntity<Object> BasicAuthHttpHeaderBody(Object body){
         //Auth Credential
         String username = "dstsetup";
@@ -96,30 +97,6 @@ public class HttpService {
         //Request Header
         return new HttpEntity<Object>(body,headers);
     }
-
-
-    //--------------------------------------------------------------------------------------------------
-
-    public static HttpEntity<Object> B2BAuthHttpHeaderBody(Object body, String username){
-        HttpEntity<Object> headerBody = null;
-        try{
-            String signature = B2B.sign(username,new Date());
-            HttpEntity<String> header = B2BAuthenHeader(signature,username);
-            //Request Header
-            headerBody = new HttpEntity<Object>(body, (MultiValueMap<String, String>) header);
-        }catch(Exception error){
-            System.out.println(error);
-        }
-        return headerBody;
-    }
-
-    //Add Body to HTTP Header
-    public static HttpEntity<Object> setHTTPBody(HttpEntity<String> header, Object body){
-        //Request Header
-        return new HttpEntity<Object>(body, (MultiValueMap<String, String>) header);
-    }
-
-    //-------------------------------------------------------------------------------------------------
 
     //Create Body
     public static Object computeObject(String key, String value){

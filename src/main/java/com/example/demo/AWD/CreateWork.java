@@ -1,5 +1,6 @@
 package com.example.demo.AWD;
 
+import com.example.demo.services.HttpRequestService;
 import com.example.demo.services.HttpService;
 
 import java.util.ArrayList;
@@ -23,15 +24,31 @@ public class CreateWork {
     }
 
     //Create instance
-    public CreateWork(HashMap<String, Object> instance){
+    public CreateWork(HashMap<String, Object> instance, String authentication){
 
-        String url = "http://10.62.25.70/awdServer/awd/services/v1/instances";
+        String AuthenMethod= null;
 
-        HttpService.POSTRequest(url,createList(instance));
+        if(authentication == "BasicAuthen"){
+            AuthenMethod = "awd";
+        }
+        else if(authentication == "B2BAuthen"){
+            AuthenMethod= "b2b";
+        }
+        else {
+            AuthenMethod= "awd";
+        }
+
+        String url = "http://10.62.25.70/awdServer/"+AuthenMethod+"/services/v1/instances";
+
+        HttpRequestService.POST(url,createList(instance));
     }
 
 
     public static void main(String[] args) {
+
+        String Authentication = "B2BAuthen";
+
+        HttpRequestService Service = new HttpRequestService(Authentication,"DSTSETUP","Passwd@2");
 
         String businessAreaName = "SAMPLEBA";
         String typeName = "SAMPLEWT";
@@ -53,7 +70,7 @@ public class CreateWork {
 
 //        Request to AWD Server
         HashMap<String, Object> instanceObject = instance.getInstance();
-        new CreateWork(instanceObject);
+        new CreateWork(instanceObject,Authentication);
 
     }
 
