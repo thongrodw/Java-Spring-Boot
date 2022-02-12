@@ -30,7 +30,7 @@ public class HttpRequestService extends HttpService{
        else if(authenticationMethod == "B2BAuthen"){
            String signature = B2B.sign(UserId, new Date());
            headers.add("remote_user", UserId);
-           headers.add("B2BSignature", signature);
+//           headers.add("B2BSignature", signature);
        }
        return headers;
    }
@@ -91,6 +91,29 @@ public class HttpRequestService extends HttpService{
             //HTTP Request Header for POST Request
             HttpHeaders header = AuthenHeader();
             HttpEntity<Object> requestHeader = new HttpEntity<Object>(body,header);
+
+            //Request
+            ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, requestHeader, String.class);
+
+            //Response
+            json = response.getBody();
+
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+
+        return json;
+    }
+
+    public static String PUTWithoutBody(String url) {
+
+        String json = null;
+
+        try {
+
+            //HTTP Request Header for POST Request
+            HttpHeaders header = AuthenHeader();
+            HttpEntity<String> requestHeader = new HttpEntity<String>(header);
 
             //Request
             ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, requestHeader, String.class);

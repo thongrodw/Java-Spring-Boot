@@ -39,6 +39,7 @@ public class CreateWork {
         }
 
         String url = "http://10.62.25.70/awdServer/"+AuthenMethod+"/services/v1/instances";
+//        String url ="https://webhook.site/600cb01f-e535-406d-b5ee-338749bece23";
 
         HttpRequestService.POST(url,createList(instance));
     }
@@ -50,8 +51,8 @@ public class CreateWork {
 
         HttpRequestService Service = new HttpRequestService(Authentication,"DSTSETUP","Passwd@2");
 
-        String businessAreaName = "SAMPLEBA";
-        String typeName = "SAMPLEWT";
+        String businessAreaName = "FINANCE";
+        String typeName = "APPLY";
         String statusName = "CREATED";
         String processName = "";
         String assignTo = "DSTSETUP";
@@ -61,8 +62,13 @@ public class CreateWork {
 
         //Create Field Value
         CreateFieldValue fieldValue = new CreateFieldValue();
-        fieldValue.setFieldValue("AMTV","1234");
-        fieldValue.setFieldValue("ATV","1234");
+        fieldValue.setFieldValue("FNAM","Wongsatorn");
+        fieldValue.setFieldValue("LNAM","Thongrod");
+        fieldValue.setFieldValue("EMAL","Thongrod");
+        fieldValue.setFieldValue("CRED","SILVER");
+        fieldValue.setFieldValue("INCO","50000");
+        fieldValue.setFieldValue("LOBF","Hello");
+
 
         //Add FieldValue to Instance
         Object fieldValueObject = fieldValue.getFieldValue();

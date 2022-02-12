@@ -2,13 +2,15 @@ package com.example.demo.AWD;
 
 import com.example.demo.services.HttpRequestService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class UpdateWork {
 
     String businessAreaName;
     String typeName;
-    HashMap<String, String> instance = new HashMap<String, String>();
+    HashMap<String, Object> instance = new HashMap<String, Object>();
 
     //Create instance
     public UpdateWork(String businessAreaName, String typeName){
@@ -26,6 +28,11 @@ public class UpdateWork {
         this.instance.put("statusName",status);
     }
 
+    //Add FieldValue
+    public void addFieldValue(Object fieldValue){
+        this.instance.put("fieldValues", fieldValue);
+    }
+
     //Request
     public void initialize(String id,String formId, String authentication){
 
@@ -41,35 +48,52 @@ public class UpdateWork {
             AuthenMethod= "awd";
         }
 
-//        String url = "http://10.62.25.70/awdServer/"+AuthenMethod+"/services/v1/instances/"+id+"/form?_="+formId;
         String url = "http://10.62.25.70/awdServer/"+AuthenMethod+"/services/v1/instances";
 
-        HashMap<String, HashMap<String, HashMap<String, String>>> updateInstances = new HashMap<>();
-        HashMap<String, HashMap<String, String>> updateInstance = new HashMap<>();
-        updateInstance.put("updateInstance", this.instance);
-        updateInstances.put("updateInstances", updateInstance);
+        List<HashMap<String, HashMap<String, Object>>> updateList = new ArrayList<>();
+        HashMap<String, List<HashMap<String, HashMap<String, Object>>>> updateInstances = new HashMap<>();
+        HashMap<String, HashMap<String, Object>> updateInstance = new HashMap<>();
 
+        updateInstance.put("updateInstance", this.instance);
+        updateList.add(updateInstance);
+        updateInstances.put("updateList", updateList);
+
+        new LockWork(id,authentication);
         System.out.println(HttpRequestService.PUT(url,updateInstances));
     }
 
     public static void main(String[] args) {
 
-//        String Authentication = "B2BAuthen";
-        String Authentication = "BasicAuthen";
+        String Authentication = "B2BAuthen";
+//        String Authentication = "BasicAuthen";
+
         HttpRequestService Service = new HttpRequestService(Authentication,"DSTSETUP","Passwd@2");
 
-        String businessAreaName = "SAMPLEBA";
-        String typeName = "SAMPLEWT";
+        String businessAreaName = "FINANCE";
+        String typeName = "APPLY";
 
         //Constructor
         UpdateWork work = new UpdateWork(businessAreaName,typeName);
 
+//        //Create Field Value
+//        CreateFieldValue fieldValue = new CreateFieldValue();
+//        fieldValue.setFieldValue("FNAM","Wongsatorn");
+//        fieldValue.setFieldValue("LNAM","Thongrod");
+//        fieldValue.setFieldValue("EMAL","Thongrod");
+//        fieldValue.setFieldValue("CRED","SILVER");
+//        fieldValue.setFieldValue("INCO","50000");
+//        fieldValue.setFieldValue("LOBF","Hello");
+//
+//        //Add FieldValue to Instance
+//        Object fieldValueObject = fieldValue.getFieldValue();
+//        work.addFieldValue(fieldValueObject);
+
         //Required Parameter
-        String workId = "2022-01-06-01.02.27.565280T01";
-        String formId = "1641457458896";
+        String workId = "2022-01-12-22.40.29.444460T01";
+        String formId = "1641285316885";
 
         //Update Status
-        work.updateStatus(workId,"PROCESSED");
+        work.updateStatus(workId,"_NEXT");
 
         //Request to AWD Server
         work.initialize(workId,formId,Authentication);

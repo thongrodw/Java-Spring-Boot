@@ -7,6 +7,8 @@ import com.example.demo.AWD.UpdateWork;
 import com.example.demo.services.HttpRequestService;
 import com.example.demo.services.HttpService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
 import java.util.HashMap;
 
@@ -15,6 +17,7 @@ import java.util.HashMap;
 public class DemoApplication {
 
 	public static void main(String[] args) {
+
 		//Run Application Server
 //		SpringApplication.run(DemoApplication.class, args);
 
